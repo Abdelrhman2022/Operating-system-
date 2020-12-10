@@ -1,0 +1,27 @@
+import threading, time
+
+
+def withdraw(lock):
+    global bal
+    for i in range(100):
+        lock.acquire()
+        local_blance = bal
+        time.sleep(0.1)
+        bal = local_blance - 1
+        lock.release()
+
+
+if __name__ == "__main__":
+    bal = 1000
+    lock = threading.Lock()
+
+    t1= threading.Thread(target=withdraw, args=(lock,))
+    t2= threading.Thread(target=withdraw, args=(lock,))
+
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+    print(bal)
